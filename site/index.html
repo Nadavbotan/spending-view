@@ -545,7 +545,7 @@ $('refresh').onclick = async () => {
 };
 
 async function fetchData() {
-  try { const r = await fetch('api/data', {cache: 'no-store'}); if (r.ok && (r.headers.get('content-type') || '').includes('json')) { mode = 'local'; return await r.json(); } } catch { /* not the Mac page, or the Mac is asleep */ }
+  if (['localhost', '127.0.0.1'].includes(location.hostname)) try { const r = await fetch('api/data', {cache: 'no-store'}); if (r.ok && (r.headers.get('content-type') || '').includes('json')) { mode = 'local'; return await r.json(); } } catch { /* not the Mac page, or the Mac is asleep */ }
   const r = await fetch('data.json', {cache: 'no-store'});
   if (!r.ok) throw Error();
   mode = 'public';
