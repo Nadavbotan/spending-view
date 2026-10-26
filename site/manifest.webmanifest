@@ -1,0 +1,11 @@
+{
+  "name": "ההוצאות שלנו",
+  "short_name": "הוצאות",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#14463a",
+  "theme_color": "#14463a",
+  "icons": [{"src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}]
+}

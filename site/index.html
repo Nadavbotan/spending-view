@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14463a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="הוצאות">
+<title>ההוצאות שלנו</title>
+<style>
+:root{color-scheme:light dark;--bg:#f5f1ea;--card:#fff;--ink:#1c1a1b;--muted:#6b6663;--line:#ece7df;--chip:#f1ece3;--accent:#17614f;--up:#b9400d;--up-bg:#fdeee4;--down:#12713a;--down-bg:#e3f4ea;--shadow:0 1px 2px rgba(40,30,20,.05),0 8px 24px rgba(40,30,20,.06);--prev:#d6d0c6}
+@media(prefers-color-scheme:dark){:root{--bg:#131110;--card:#1e1b1a;--ink:#f3efe9;--muted:#a49e98;--line:#2f2b29;--chip:#2a2625;--accent:#5fcfab;--up:#f7a577;--up-bg:#3a241a;--down:#79d9a3;--down-bg:#16301f;--shadow:none;--prev:#4a4541}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Heebo","Assistant",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;line-height:1.5;padding:max(16px,env(safe-area-inset-top)) 16px calc(92px + env(safe-area-inset-bottom));max-width:640px;margin:0 auto}
+h1{font-size:24px;font-weight:800;margin:0;letter-spacing:-.3px}
+h2{font-size:15px;font-weight:700;margin:28px 4px 10px;color:var(--muted)}
+button,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0;text-align:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:8px}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 18px}
+.top p{margin:2px 0 0}
+.pill{position:relative;display:block}
+.pill select{appearance:none;-webkit-appearance:none;min-height:44px;padding:8px 16px 8px 34px;border:1px solid var(--line);border-radius:999px;background:var(--card);font-weight:600;box-shadow:var(--shadow);cursor:pointer}
+.pill::after{content:"";position:absolute;left:14px;top:50%;width:7px;height:7px;border-left:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:translateY(-70%) rotate(-45deg);pointer-events:none}
+.card{background:var(--card);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+.hero{background:linear-gradient(150deg,#14463a 0%,#1d7560 100%);color:#fff;border-radius:24px;padding:22px 22px 18px;box-shadow:0 12px 30px rgba(20,70,58,.28)}
+.hero .eyebrow{font-size:15px;opacity:.85;margin:0}
+.hero .big{font-size:clamp(44px,13vw,60px);font-weight:800;line-height:1.1;margin:6px 0 4px;letter-spacing:-1.5px;font-variant-numeric:tabular-nums}
+.hero .period{font-size:13px;opacity:.75;margin:0}
+.progress{height:6px;background:rgba(255,255,255,.2);border-radius:99px;margin:14px 0 6px;overflow:hidden}
+.progress i{display:block;height:100%;background:#fff;border-radius:99px}
+.delta-line{margin:14px 0 0;font-size:14px;display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.18)}
+.stats span{display:block;font-size:12px;opacity:.75}
+.stats strong{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+.hero .note{font-size:12px;opacity:.7;margin:12px 0 0}
+.delta{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:13px;font-weight:700;background:var(--chip);white-space:nowrap}
+.delta.up{background:var(--up-bg);color:var(--up)}
+.delta.down{background:var(--down-bg);color:var(--down)}
+.hero .delta{background:rgba(255,255,255,.16);color:#fff}
+.cat-row{border-bottom:1px solid var(--line)}
+.cat-row:last-child{border-bottom:0}
+.cat-btn{display:block;width:100%;padding:14px 16px;min-height:60px}
+.cat-top{display:flex;align-items:center;gap:10px}
+.dot{width:12px;height:12px;border-radius:50%;flex:none}
+.cat-name{flex:1;font-weight:600}
+.cat-amt{font-weight:700;font-variant-numeric:tabular-nums}
+.cat-pct{width:42px;text-align:left;color:var(--muted);font-size:13px}
+.bar{height:6px;background:var(--chip);border-radius:99px;margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px}
+.chev{width:8px;height:8px;border-left:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .15s;flex:none}
+[aria-expanded=true] .chev{transform:rotate(135deg)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 4px}
+.chip{min-height:44px;padding:8px 16px;border-radius:99px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:14px}
+.chip[aria-expanded=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.panel{padding:4px 12px 14px;background:var(--chip)}
+.tx{background:var(--card);border-radius:14px;padding:12px 14px;margin-top:8px}
+.tx.dim{opacity:.6}
+.tx-head{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.tx-head strong{overflow-wrap:anywhere}
+.tx-head b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.tx-meta{font-size:13px;color:var(--muted);margin:2px 0 8px}
+.tx-edit{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.tx-edit select{min-height:44px;padding:6px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);flex:1;min-width:140px}
+.tx-edit label{display:flex;align-items:center;gap:8px;font-size:14px;min-height:44px}
+input[type=checkbox]{width:22px;height:22px;accent-color:var(--accent)}
+.empty{padding:22px 16px;text-align:center;color:var(--muted)}
+.sync{margin-top:28px;background:var(--card);border-radius:16px;padding:4px 16px;box-shadow:var(--shadow)}
+.sync summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:600}
+.sync p{font-size:13px;color:var(--muted);margin:0 0 12px}
+.btn{min-height:44px;padding:8px 18px;border-radius:12px;background:var(--accent);color:var(--bg);font-weight:700;margin-bottom:14px}
+.foot{font-size:12px;color:var(--muted);margin:18px 4px 0}
+.error{color:var(--up)}
+/* trends */
+.chart{padding:18px 12px 14px}
+.plot{position:relative;height:178px;border-bottom:1px solid var(--line)}
+.cols{display:flex;gap:6px;height:100%;align-items:stretch}
+.col{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;border-radius:10px 10px 0 0;padding-bottom:0}
+.col .v{font-size:11px;color:var(--muted);margin-bottom:3px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.col .stack{width:min(100%,46px);display:flex;flex-direction:column-reverse;border-radius:8px 8px 0 0;overflow:hidden;position:relative}
+.col .stack span{display:block;min-height:1px}
+.col.partial .stack{opacity:.6}
+.col.partial .stack::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 5px,rgba(255,255,255,.35) 5px 8px)}
+.col[aria-pressed=true]{background:var(--chip)}
+.col[aria-pressed=true] .v{color:var(--ink);font-weight:700}
+.avg{position:absolute;right:0;left:0;border-top:2px dashed var(--muted);opacity:.55;pointer-events:none}
+.avg em{position:absolute;right:0;top:-20px;font-size:11px;font-style:normal;color:var(--muted);background:var(--card);padding:0 4px}
+.xl{display:flex;gap:6px;margin-top:6px}
+.xl span{flex:1;text-align:center;font-size:12px;color:var(--muted);min-width:0}
+.xl span.on{color:var(--ink);font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:14px;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend .dot{width:9px;height:9px}
+.snap{padding:18px 18px 16px;margin-top:12px}
+.snap .big{font-size:36px;font-weight:800;letter-spacing:-1px;font-variant-numeric:tabular-nums;margin:2px 0}
+.snap p{margin:0}
+.snap .lines{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.snap .line{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px}
+.insight{display:flex;gap:12px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line)}
+.insight:last-child{border-bottom:0}
+.insight p{margin:0;flex:1;font-size:14px}
+.insight b{font-weight:700}
+.cmp{padding:14px 16px;border-bottom:1px solid var(--line)}
+.cmp:last-child{border-bottom:0}
+.cmp .top2{display:flex;align-items:center;gap:10px}
+.dual{margin-top:10px;display:flex;flex-direction:column;gap:4px}
+.dual i{display:block;height:6px;border-radius:99px}
+.dual i.p{background:var(--prev)}
+.cmp-key{font-size:12px;color:var(--muted);padding:12px 16px 0;display:flex;gap:14px}
+.cmp-key span{display:inline-flex;align-items:center;gap:6px}
+.cmp-key .dot{width:9px;height:9px}
+.shop{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line)}
+.shop:last-child{border-bottom:0}
+.shop .n{flex:1;overflow-wrap:anywhere}
+.shop small{color:var(--muted)}
+.shop b{font-variant-numeric:tabular-nums}
+nav{position:fixed;bottom:0;right:0;left:0;z-index:5;padding:8px 16px calc(8px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+nav div{max-width:640px;margin:auto;display:flex;gap:8px}
+nav button{flex:1;min-height:56px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:13px;font-weight:600;color:var(--muted)}
+nav button svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav button[aria-current=page]{color:var(--accent);background:var(--chip)}
+[hidden]{display:none!important}
+.tag{display:inline-block;background:var(--up-bg);color:var(--up);padding:0 8px;border-radius:99px;font-size:12px;font-weight:700}
+.src{font-size:12px;color:var(--muted)}
+.reason{background:var(--chip);border-radius:10px;padding:8px 12px;margin:0 0 10px;font-size:13px;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.reason button{font-weight:700;color:var(--accent);min-height:44px;padding:0 6px}
+.note-btn{display:block;font-size:12px;opacity:.85;margin:10px 0 0;text-decoration:underline;color:#fff;min-height:24px}
+.worth{padding:6px 0;margin-top:14px}
+.worth .insight{cursor:default}
+.worth button.insight{width:100%;cursor:pointer}
+.rev{display:flex;gap:10px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line)}
+.rev:last-child{border-bottom:0}
+.rev .n{flex:1;overflow-wrap:anywhere}
+.rev small{display:block;color:var(--muted)}
+.rev select{min-height:44px;max-width:150px;padding:6px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+.tx-edit select.mo{flex:0 0 auto;min-width:0}
+.status-line{font-size:12px;color:var(--muted);margin:6px 0 12px}
+</style>
+<body>
+<header class="top">
+  <div><h1>ההוצאות שלנו</h1><p id="updated" class="muted small">טוען נתונים...</p><button id="send" class="btn" hidden style="margin:8px 0 0"></button></div>
+  <label class="pill"><span class="sr">חודש</span><select id="month"></select></label>
+</header>
+
+<main>
+  <section id="view-home" aria-label="החודש">
+    <div id="hero" class="hero"></div>
+    <div id="worth" class="card worth" hidden></div>
+    <h2>לאן הלך הכסף</h2>
+    <div id="categories" class="card"></div>
+    <div id="chips" class="chips"></div>
+    <div id="extra"></div>
+    <div id="review-wrap" hidden><h2>צריך קטגוריה</h2><div id="review" class="card"></div></div>
+    <details class="sync">
+      <summary>עדכון ופרטיות</summary>
+      <p id="privacy" class="status-line"></p>
+      <p>הנתונים נשמרים רק על המחשב שלך ועל הטלפון הזה. העדכון האוטומטי רץ פעם ביום ב־10:30.</p>
+      <button id="refresh" class="btn">רענן עכשיו</button>
+    </details>
+  </section>
+
+  <section id="view-trends" aria-label="מגמות" hidden>
+    <div id="trend-chart" class="card chart"></div>
+    <div id="trend-snap" class="card snap"></div>
+    <h2>מה השתנה</h2>
+    <div id="insights" class="card"></div>
+    <h2>לפי קטגוריה, מול החודש הקודם</h2>
+    <div id="cat-compare" class="card"></div>
+    <h2>החנויות הגדולות</h2>
+    <div id="top-shops" class="card"></div>
+  </section>
+
+  <p class="foot">המחזור הוא מ־11 בחודש עד 10 בחודש הבא. תנועות חריגות נשארות ברשומות אך לא נכללות בסיכום. החזרים מוצגים בנפרד ולא מקטינים את ההוצאה.</p>
+</main>
+
+<nav aria-label="תצוגות">
+  <div>
+    <button id="tab-home" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg>החודש</button>
+    <button id="tab-trends"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/></svg>מגמות</button>
+  </div>
+</nav>
+
+<script>
+'use strict';
+let data, queue = [], view = 'home', openKey = null, sel = null, offline = false, savedAt = null, monthsBuilt = false, flushing = false, mode = 'local';
+const $ = id => document.getElementById(id);
+const el = (tag, text, cls) => { const n = document.createElement(tag); if (text !== undefined) n.textContent = text; if (cls) n.className = cls; return n; };
+const nf0 = new Intl.NumberFormat('he-IL', {style: 'currency', currency: 'ILS', maximumFractionDigits: 0});
+const nf2 = new Intl.NumberFormat('he-IL', {style: 'currency', currency: 'ILS'});
+const money0 = x => nf0.format(x), money2 = x => nf2.format(x);
+const store = {get(k, f) { try { return JSON.parse(localStorage.getItem(k)) ?? f; } catch { return f; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* storage full or blocked: the app still works from memory */ } }};
+queue = store.get('spending-queue-v2', []);
+const norm = s => String(s || '').replace(/[\u200e\u200f\u202a-\u202e]/g, '').trim().toLowerCase().replace(/\s+/g, ' ');
+
+const names = {groceries: 'מזון וסופר', transport: 'תחבורה', dining: 'מסעדות וקפה', shopping: 'קניות', housing: 'דיור', health: 'בריאות', kids: 'ילדים', subscriptions: 'מנויים', travel: 'נסיעות וחופשות', pets: 'חיות מחמד', transfers: 'העברות ושיקים', other: 'אחר', salary: 'משכורת', refund: 'החזרים', other_income: 'הכנסה אחרת', all: 'כל התנועות', excluded: 'תנועות חריגות'};
+const colors = {groceries: '#2e9e75', transport: '#3f7fd0', dining: '#f08c3a', shopping: '#9b6ad6', housing: '#5f7186', health: '#e0566f', kids: '#e6b422', subscriptions: '#2fa7b8', travel: '#c4568f', pets: '#8a6a3f', transfers: '#7a8aa0', other: '#a3a09b'};
+const name = k => names[k] || k;
+const reasons = {card_payment: 'חיוב הכרטיס: הקניות כבר נספרות מהכרטיס', savings: 'חיסכון או השקעה, לא הוצאה', large: 'תנועה גדולה: לא נספרת עד שתחליטו', user_rule: 'ביקשתם לא לספור את הסוחר הזה'};
+const color = k => colors[k] || '#a3a09b';
+
+/* ---- cycle / date helpers: month YYYY-MM runs from the 11th of that month to the 10th of the next ---- */
+const pad = n => String(n).padStart(2, '0');
+const isoDate = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parseM = m => { const [y, mo] = m.split('-').map(Number); return {y, mo}; };
+const shiftM = (m, k) => { const {y, mo} = parseM(m); const d = new Date(y, mo - 1 + k, 1); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}`; };
+const startOf = m => { const {y, mo} = parseM(m); return new Date(y, mo - 1, 11); };
+const lenOf = m => Math.round((startOf(shiftM(m, 1)) - startOf(m)) / 864e5);
+const midnight = () => { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); };
+function currentMonth() { const t = new Date(), k = `${t.getFullYear()}-${pad(t.getMonth() + 1)}`; return t.getDate() >= 11 ? k : shiftM(k, -1); }
+const isCurrent = m => m === currentMonth();
+const elapsed = m => Math.min(lenOf(m), Math.max(0, Math.round((midnight() - startOf(m)) / 864e5) + 1));
+function cutoff(m, days) { const d = startOf(m); d.setDate(d.getDate() + days - 1); return isoDate(d); }
+const monthName = m => new Date(parseM(m).y, parseM(m).mo - 1, 1).toLocaleDateString('he-IL', {month: 'long'});
+const monthFull = m => `${monthName(m)} ${parseM(m).y}`;
+const fmtDay = d => d.toLocaleDateString('he-IL', {day: 'numeric', month: 'short'});
+const dm = d => { const [y, mo, da] = d.split('-').map(Number); return fmtDay(new Date(y, mo - 1, da)); };
+function period(m) { const s = startOf(m), e = startOf(shiftM(m, 1)); e.setDate(e.getDate() - 1); return `${fmtDay(s)} – ${fmtDay(e)}`; }
+
+/* ---- data helpers ---- */
+const rows = m => data.transactions.filter(t => t.month === m);
+function spend(m, upto) { let s = 0; for (const t of rows(m)) if (t.type === 'expense' && !t.excluded && (!upto || t.date <= upto)) s += t.amount; return s; }
+function byCat(m, upto) { const g = new Map(); for (const t of rows(m)) if (t.type === 'expense' && !t.excluded && (!upto || t.date <= upto)) g.set(t.category, (g.get(t.category) || 0) + t.amount); return g; }
+function sums(m) { let income = 0, refund = 0, excluded = 0, pending = 0; for (const t of rows(m)) { if (t.excluded) { excluded++; continue; } if (t.status === 'pending') pending++; if (t.type === 'income') { if (t.category === 'refund') refund += t.amount; else income += t.amount; } } return {income, refund, excluded, pending}; }
+const allMonths = () => { const s = new Set(data.transactions.map(t => t.month)); s.add(currentMonth()); return [...s].sort(); };
+const hasData = m => data.transactions.some(t => t.month === m);
+/* the comparison month and cut-off used for a like-for-like comparison */
+function prevOf(m) { const p = shiftM(m, -1); return {month: p, upto: isCurrent(m) ? cutoff(p, elapsed(m)) : null, has: hasData(p)}; }
+
+/* ---- your fixes: applied here at once, sent to the Mac when it is reachable ---- */
+const cycleMonth = d => { const [y, mo, da] = d.split('-').map(Number); const k = `${y}-${pad(mo)}`; return da >= 11 ? k : shiftM(k, -1); };
+const sideOk = (t, c) => (t.type === 'income') === data.categories.income.includes(c);
+function applyLocal(op) {
+  const row = data.transactions.find(t => t.id === op.id);
+  if (!row) return;
+  const key = norm(row.merchant);
+  if (op.op === 'category') { for (const t of data.transactions) if ((op.scope === 'one' ? t.id === row.id : norm(t.merchant) === key) && sideOk(t, op.category)) { t.category = op.category; t.ruled = true; } }
+  else if (op.op === 'ignore') { for (const t of (op.always ? data.transactions.filter(x => norm(x.merchant) === key) : [row])) { t.excluded = op.value; t.decided = true; if (!op.value) t.auto = null; } }
+  else if (op.op === 'hide') { for (const t of data.transactions) if (norm(t.merchant) === key || t.id === row.id) t.hidden = op.value; }
+  else if (op.op === 'month') row.month = op.month || cycleMonth(row.date);
+}
+function act(op) { queue.push(op); store.set('spending-queue-v2', queue); applyLocal(op); render(); flush(); }
+const opKey = o => JSON.stringify([o.op, o.id, o.category, o.scope, o.value, o.always, o.month]);
+function opApplied(o) {
+  const row = data.transactions.find(t => t.id === o.id);
+  if (!row) return true;
+  if (o.op === 'category') return row.category === o.category;
+  if (o.op === 'ignore') return row.excluded === o.value;
+  if (o.op === 'month') return row.month === (o.month || cycleMonth(row.date));
+  if (o.op === 'hide') return row.hidden === o.value;
+  return true;
+}
+function sendToMac() {
+  const todo = queue.filter(o => !o.sentAt).slice(0, 12);
+  if (!todo.length || !data.inbox) return;
+  const body = 'לחצו Submit new issue ואל תערכו את הטקסט.\n\n```json\n' + JSON.stringify({ops: todo.map(({sentAt, ...o}) => o)}) + '\n```';
+  const keys = new Set(todo.map(opKey));
+  for (const o of queue) if (keys.has(opKey(o))) o.sentAt = Date.now();
+  store.set('spending-queue-v2', queue);
+  window.open(`https://github.com/${data.inbox}/issues/new?title=${encodeURIComponent('תיקונים')}&body=${encodeURIComponent(body)}`, '_blank');
+  render();
+}
+async function flush() {
+  if (flushing || !queue.length || mode !== 'local') return;
+  flushing = true;
+  const sent = queue.length;
+  try {
+    const r = await fetch('api/ops', {method: 'POST', headers: {'Content-Type': 'application/json', 'X-Spending': '1'}, body: JSON.stringify({ops: queue.slice(0, sent).map(({sentAt, ...o}) => o)})});
+    if (!r.ok) throw Error();
+    queue = queue.slice(sent); store.set('spending-queue-v2', queue);
+    flushing = false;
+    await load();
+  } catch { flushing = false; offline = true; render(); }
+}
+
+function deltaChip(diff, pctBase, forceNeutral) {
+  const abs = Math.abs(diff);
+  if (abs < 1) return el('span', 'ללא שינוי', 'delta');
+  const pct = pctBase > 0 ? ` · ${Math.round(abs / pctBase * 100)}%` : '';
+  return el('span', `${diff > 0 ? '▲' : '▼'} ${money0(abs)}${pct}`, `delta ${forceNeutral ? '' : diff > 0 ? 'up' : 'down'}`);
+}
+
+/* ================= HOME ================= */
+function renderHero() {
+  const m = sel, hero = $('hero'), cur = isCurrent(m), spent = spend(m), s = sums(m), p = prevOf(m);
+  hero.replaceChildren(
+    el('p', cur ? 'הוצאנו עד עכשיו ב' + monthName(m) : 'סך ההוצאות ב' + monthName(m), 'eyebrow'),
+    el('p', money0(spent), 'big'),
+    el('p', `מחזור ${period(m)}`, 'period'));
+  if (cur) {
+    const e = elapsed(m), len = lenOf(m), bar = el('div', undefined, 'progress'), fill = el('i');
+    fill.style.width = `${Math.round(e / len * 100)}%`; bar.append(fill);
+    hero.append(bar, el('p', `יום ${e} מתוך ${len}`, 'period'));
+  }
+  if (p.has) {
+    const prev = spend(p.month, p.upto), line = el('p', undefined, 'delta-line');
+    line.append(deltaChip(spent - prev, prev, true), el('span', cur ? 'לעומת אותה נקודה בחודש שעבר' : 'לעומת החודש הקודם', 'period'));
+    hero.append(line);
+  }
+  const stats = el('div', undefined, 'stats');
+  for (const [label, value] of [['הכנסות', s.income], ['החזרים', s.refund], ['יתרה', s.income + s.refund - spent]]) {
+    const d = el('div'); d.append(el('span', label), el('strong', money0(value))); stats.append(d);
+  }
+  hero.append(stats);
+  const transfers = rows(m).filter(t => t.type === 'expense' && !t.excluded && t.category === 'transfers').reduce((a, t) => a + t.amount, 0);
+  if (transfers > 0) { const b = el('button', `כולל ${money0(transfers)} העברות ושיקים (Bit ועוד) · לפירוט`, 'note-btn'); b.onclick = () => { openKey = 'transfers'; render(); $('categories').scrollIntoView({behavior: 'smooth'}); }; hero.append(b); }
+  const skipped = rows(m).filter(t => t.excluded);
+  if (skipped.length) { const b = el('button', `לא נספרו ${skipped.length} תנועות (${money0(skipped.reduce((a, t) => a + t.amount, 0))}) · לפירוט`, 'note-btn'); b.onclick = () => { openKey = 'excluded'; render(); $('chips').scrollIntoView({behavior: 'smooth'}); }; hero.append(b); }
+  if (s.pending) hero.append(el('p', `${s.pending} רכישות ממתינות כלולות`, 'note'));
+}
+
+function txCard(t) {
+  const n = el('article', undefined, 'tx' + (t.excluded ? ' dim' : '')), head = el('div', undefined, 'tx-head');
+  head.append(el('strong', t.merchant), el('b', (t.type === 'income' ? '+' : '') + money2(t.amount)));
+  const meta = el('div', undefined, 'tx-meta');
+  meta.append(document.createTextNode(`${dm(t.date)} · ${t.type === 'expense' ? 'הוצאה' : t.category === 'refund' ? 'החזר' : 'הכנסה'}${t.installment ? ` · תשלום ${t.installment}` : ''} · `));
+  meta.append(el('span', t.source === 'card' ? `כרטיס ${t.card}` : 'בנק', 'src'));
+  if (t.status === 'pending') { meta.append(document.createTextNode(' ')); meta.append(el('span', 'ממתין', 'tag')); }
+  n.append(head, meta);
+  if (t.excluded && t.auto) {
+    const r = el('div', undefined, 'reason'), b = el('button', 'ספרו אותה');
+    b.onclick = () => act({op: 'ignore', id: t.id, value: false, always: t.auto === 'user_rule'});
+    r.append(el('span', reasons[t.auto] || 'לא נספרת'), b); n.append(r);
+  }
+  const edit = el('div', undefined, 'tx-edit'), sl = el('select');
+  for (const key of (t.type === 'income' ? data.categories.income : data.categories.expenses)) { const o = el('option', name(key)); o.value = key; sl.append(o); }
+  sl.value = t.category; sl.setAttribute('aria-label', 'קטגוריה (לכל החיובים מהסוחר הזה)');
+  sl.onchange = () => act({op: 'category', id: t.id, category: sl.value, scope: 'merchant'});
+  const mo = el('select', undefined, 'mo'); mo.setAttribute('aria-label', 'נספרת בחודש');
+  for (const k of [-1, 0, 1]) { const m = shiftM(cycleMonth(t.date), k), o = el('option', monthName(m)); o.value = m; mo.append(o); }
+  mo.value = t.month;
+  mo.onchange = () => act({op: 'month', id: t.id, month: mo.value === cycleMonth(t.date) ? null : mo.value});
+  const c1 = el('input'); c1.type = 'checkbox'; c1.checked = t.excluded;
+  c1.onchange = () => act({op: 'ignore', id: t.id, value: c1.checked, always: false});
+  const l1 = el('label'); l1.append(c1, document.createTextNode('לא לספור'));
+  const c2 = el('input'); c2.type = 'checkbox'; c2.checked = t.auto === 'user_rule';
+  c2.onchange = () => act({op: 'ignore', id: t.id, value: c2.checked, always: true});
+  const l2 = el('label'); l2.append(c2, document.createTextNode('אף פעם מהסוחר הזה'));
+  const c3 = el('input'); c3.type = 'checkbox'; c3.checked = !!t.hidden;
+  c3.onchange = () => act({op: 'hide', id: t.id, value: c3.checked});
+  const l3 = el('label'); l3.append(c3, document.createTextNode('הסתר את השם באתר הציבורי'));
+  edit.append(sl, mo, l1, l2, l3); n.append(edit);
+  return n;
+}
+
+function panelFor(key) {
+  const tx = rows(sel).filter(t => key === 'all' || (key === 'excluded' ? t.excluded : t.category === key && t.type === 'expense')).sort((a, b) => b.date.localeCompare(a.date));
+  const p = el('div', undefined, 'panel');
+  if (!tx.length) p.append(el('div', 'אין תנועות להצגה', 'empty'));
+  for (const t of tx) p.append(txCard(t));
+  return p;
+}
+
+function renderCategories() {
+  const box = $('categories'), g = byCat(sel), total = [...g.values()].reduce((a, b) => a + b, 0);
+  box.replaceChildren();
+  if (!g.size) box.append(el('div', 'אין עדיין הוצאות בחודש הזה', 'empty'));
+  for (const [key, value] of [...g].sort((a, b) => b[1] - a[1])) {
+    const row = el('div', undefined, 'cat-row'), b = el('button', undefined, 'cat-btn');
+    b.setAttribute('aria-expanded', String(openKey === key));
+    const top = el('div', undefined, 'cat-top'), dot = el('span', undefined, 'dot'); dot.style.background = color(key);
+    top.append(dot, el('span', name(key), 'cat-name'), el('span', money0(value), 'cat-amt'), el('span', `${Math.round(value / total * 100)}%`, 'cat-pct'), el('span', undefined, 'chev'));
+    const bar = el('div', undefined, 'bar'), fill = el('i'); fill.style.width = `${value / total * 100}%`; fill.style.background = color(key); bar.append(fill);
+    b.append(top, bar);
+    b.onclick = () => { openKey = openKey === key ? null : key; render(); };
+    row.append(b); if (openKey === key) row.append(panelFor(key)); box.append(row);
+  }
+  const chips = $('chips'); chips.replaceChildren();
+  for (const key of ['all', 'excluded']) {
+    const b = el('button', name(key), 'chip'); b.setAttribute('aria-expanded', String(openKey === key));
+    b.onclick = () => { openKey = openKey === key ? null : key; render(); }; chips.append(b);
+  }
+  $('extra').replaceChildren(...(openKey === 'all' || openKey === 'excluded' ? [panelFor(openKey)] : []));
+}
+
+/* ================= TRENDS ================= */
+function renderChart() {
+  const box = $('trend-chart'), months = allMonths().slice(-7), cats = data.categories.expenses;
+  const totals = months.map(m => spend(m)), max = Math.max(...totals, 1);
+  const done = months.filter(m => !isCurrent(m) && hasData(m)), avg = done.length ? done.reduce((a, m) => a + spend(m), 0) / done.length : 0;
+  box.replaceChildren(el('div', 'הוצאות לפי חודש', 'small muted'));
+  box.firstChild.style.margin = '0 6px 12px';
+  const plot = el('div', undefined, 'plot'), cols = el('div', undefined, 'cols'), xl = el('div', undefined, 'xl');
+  months.forEach((m, i) => {
+    const b = el('button', undefined, 'col' + (isCurrent(m) ? ' partial' : '')); b.setAttribute('aria-pressed', String(m === sel));
+    b.setAttribute('aria-label', `${monthFull(m)}: ${money0(totals[i])}`);
+    const stack = el('div', undefined, 'stack'); stack.style.height = `${totals[i] / max * 80}%`;
+    const g = byCat(m);
+    for (const c of cats) if (g.get(c)) { const s = el('span'); s.style.flex = String(g.get(c)); s.style.background = color(c); stack.append(s); }
+    b.append(el('span', totals[i] ? `${(totals[i] / 1000).toFixed(1)}K` : '', 'v'), stack);
+    b.onclick = () => { sel = m; openKey = null; syncSelect(); render(); };
+    cols.append(b);
+    xl.append(el('span', new Date(parseM(m).y, parseM(m).mo - 1, 1).toLocaleDateString('he-IL', {month: 'short'}), m === sel ? 'on' : ''));
+  });
+  plot.append(cols);
+  if (avg > 0) { const line = el('div', undefined, 'avg'); line.style.bottom = `${avg / max * 80}%`; plot.append(line); }
+  const legend = el('div', undefined, 'legend');
+  for (const c of cats) { const s = el('span'), d = el('i', undefined, 'dot'); d.style.background = color(c); s.append(d, document.createTextNode(name(c))); legend.append(s); }
+  const cap = [avg > 0 ? `הקו המקווקו: ממוצע חודשי ${money0(avg)}` : '', months.some(isCurrent) ? 'העמודה המפוספסת: החודש הנוכחי, עד היום' : ''].filter(Boolean).join(' · ');
+  box.append(plot, xl, legend);
+  if (cap) { const c = el('p', cap, 'small muted'); c.style.margin = '12px 6px 0'; box.append(c); }
+}
+
+function compareRows() {
+  const m = sel, p = prevOf(m), now = byCat(m), before = p.has ? byCat(p.month, p.upto) : new Map();
+  const keys = new Set([...now.keys(), ...before.keys()]);
+  return [...keys].map(k => ({key: k, now: now.get(k) || 0, before: before.get(k) || 0, diff: (now.get(k) || 0) - (before.get(k) || 0)}));
+}
+
+function renderSnapshot() {
+  const m = sel, box = $('trend-snap'), cur = isCurrent(m), spent = spend(m), p = prevOf(m);
+  box.replaceChildren(el('p', (cur ? 'עד היום ב' : 'ב') + monthName(m), 'small muted'), el('p', money0(spent), 'big'));
+  const lines = el('div', undefined, 'lines');
+  const add = (label, chip) => { const l = el('div', undefined, 'line'); l.append(el('span', label), chip); lines.append(l); };
+  if (p.has) { const prev = spend(p.month, p.upto); add(cur ? 'מול אותה נקודה בחודש שעבר' : 'מול החודש הקודם', deltaChip(spent - prev, prev)); }
+  const earlier = allMonths().filter(x => x < m && hasData(x) && !isCurrent(x)).slice(-3);
+  if (earlier.length) {
+    const avg = earlier.reduce((a, x) => a + spend(x, cur ? cutoff(x, elapsed(m)) : null), 0) / earlier.length;
+    add(`מול ממוצע ${earlier.length} חודשים קודמים${cur ? ' (עד אותו יום)' : ''}`, deltaChip(spent - avg, avg));
+  }
+  if (lines.childNodes.length) box.append(lines);
+}
+
+function renderInsights() {
+  const box = $('insights'), r = compareRows().filter(x => x.now > 0 || x.before > 0), p = prevOf(sel), total = spend(sel);
+  box.replaceChildren();
+  const add = (chip, parts) => { const row = el('div', undefined, 'insight'), t = el('p'); for (const x of parts) t.append(x.b ? Object.assign(el('b'), {textContent: x.t}) : document.createTextNode(x.t)); row.append(chip, t); box.append(row); };
+  const top = [...r].sort((a, b) => b.now - a.now)[0];
+  if (top && top.now > 0 && total > 0) add(el('span', '★', 'delta'), [{t: 'הקטגוריה הגדולה: '}, {t: name(top.key), b: 1}, {t: ` (${Math.round(top.now / total * 100)}% מההוצאות)`}]);
+  if (p.has) {
+    const ups = r.filter(x => x.diff >= 30).sort((a, b) => b.diff - a.diff).slice(0, 3);
+    const downs = r.filter(x => x.diff <= -30).sort((a, b) => a.diff - b.diff).slice(0, 2);
+    for (const x of ups) add(el('span', '▲', 'delta up'), [{t: name(x.key), b: 1}, {t: x.before ? ` עלתה ב־${money0(x.diff)} (${Math.round(x.diff / x.before * 100)}%)` : ` ${money0(x.diff)} החודש, בלי הוצאה כזו קודם`}]);
+    for (const x of downs) add(el('span', '▼', 'delta down'), [{t: name(x.key), b: 1}, {t: ` ירדה ב־${money0(-x.diff)} (${Math.round(-x.diff / x.before * 100)}%)`}]);
+  }
+  if (!box.childNodes.length) box.append(el('div', 'אין מספיק נתונים להשוואה עדיין', 'empty'));
+}
+
+function renderCompare() {
+  const box = $('cat-compare'), r = compareRows().sort((a, b) => b.now - a.now || b.before - a.before), p = prevOf(sel);
+  box.replaceChildren();
+  if (!r.length) { box.append(el('div', 'אין נתונים', 'empty')); return; }
+  const key = el('div', undefined, 'cmp-key');
+  const k1 = el('span'), d1 = el('i', undefined, 'dot'); d1.style.background = 'var(--accent)'; k1.append(d1, document.createTextNode(monthName(sel)));
+  const k2 = el('span'), d2 = el('i', undefined, 'dot'); d2.style.background = 'var(--prev)'; k2.append(d2, document.createTextNode(p.has ? (isCurrent(sel) ? monthName(p.month) + ' עד אותו יום' : monthName(p.month)) : 'חודש קודם'));
+  key.append(k1, k2); box.append(key);
+  const max = Math.max(...r.map(x => Math.max(x.now, x.before)), 1);
+  for (const x of r) {
+    const row = el('div', undefined, 'cmp'), top = el('div', undefined, 'cat-top'), dot = el('span', undefined, 'dot'); dot.style.background = color(x.key);
+    top.append(dot, el('span', name(x.key), 'cat-name'), el('span', money0(x.now), 'cat-amt'), p.has ? deltaChip(x.diff, x.before) : el('span'));
+    const dual = el('div', undefined, 'dual'), a = el('i'), b = el('i', undefined, 'p');
+    a.style.width = `${x.now / max * 100}%`; a.style.background = color(x.key); b.style.width = `${x.before / max * 100}%`;
+    dual.append(a, b); row.append(top, dual); box.append(row);
+  }
+}
+
+function renderShops() {
+  const box = $('top-shops'), g = new Map(); box.replaceChildren();
+  for (const t of rows(sel)) if (t.type === 'expense' && !t.excluded) { const o = g.get(t.merchant) || {n: 0, sum: 0}; o.n++; o.sum += t.amount; g.set(t.merchant, o); }
+  const top = [...g].sort((a, b) => b[1].sum - a[1].sum).slice(0, 5);
+  if (!top.length) box.append(el('div', 'אין נתונים', 'empty'));
+  top.forEach(([merchant, o], i) => {
+    const row = el('div', undefined, 'shop'), n = el('div', undefined, 'n');
+    n.append(el('span', merchant), document.createElement('br'), el('small', `${o.n} ${o.n === 1 ? 'תנועה' : 'תנועות'}`));
+    row.append(el('span', String(i + 1), 'delta'), n, el('b', money0(o.sum))); box.append(row);
+  });
+}
+
+/* ================= home extras ================= */
+function renderWorth() {
+  const box = $('worth'), m = sel, items = [];
+  const open = rows(m).filter(t => t.excluded && t.auto === 'large' && !t.decided);
+  if (open.length) items.push({text: `${open.length} תנועות גדולות (${money0(open.reduce((a, t) => a + t.amount, 0))}) מחכות להחלטה שלכם`, key: 'excluded'});
+  const big = rows(m).filter(t => t.type === 'expense' && !t.excluded && t.amount >= 1500).sort((a, b) => b.amount - a.amount)[0];
+  if (big) items.push({text: `חיוב גדול: ${big.merchant} ${money0(big.amount)} (${dm(big.date)})`, key: big.category});
+  if (prevOf(m).has) {
+    const rise = compareRows().filter(x => x.before > 0 && x.diff >= 300 && x.diff / x.before >= 0.2).sort((a, b) => b.diff - a.diff)[0];
+    if (rise) items.push({text: `${name(rise.key)} עלתה ב־${money0(rise.diff)} לעומת ${isCurrent(m) ? 'אותה נקודה בחודש שעבר' : 'החודש הקודם'}`, key: rise.key});
+  }
+  box.hidden = !items.length; box.replaceChildren();
+  for (const it of items.slice(0, 3)) {
+    const b = el('button', undefined, 'insight'); b.append(el('span', '!', 'delta up'), el('p', it.text));
+    b.onclick = () => { openKey = it.key; render(); $('categories').scrollIntoView({behavior: 'smooth'}); };
+    box.append(b);
+  }
+}
+function renderReview() {
+  const g = new Map();
+  for (const t of rows(sel)) if (t.type === 'expense' && !t.excluded && t.category === 'other' && !t.ruled) { const o = g.get(t.merchant) || {id: t.id, n: 0, sum: 0}; o.n++; o.sum += t.amount; g.set(t.merchant, o); }
+  const top = [...g].sort((a, b) => b[1].sum - a[1].sum).slice(0, 5);
+  $('review-wrap').hidden = !top.length; $('review').replaceChildren();
+  for (const [merchant, o] of top) {
+    const row = el('div', undefined, 'rev'), n = el('div', undefined, 'n'), sl = el('select');
+    n.append(el('span', merchant), el('small', `${o.n} ${o.n === 1 ? 'חיוב' : 'חיובים'} · ${money0(o.sum)}`));
+    const first = el('option', 'בחרו קטגוריה'); first.value = ''; sl.append(first);
+    for (const k of data.categories.expenses) if (k !== 'other') { const op = el('option', name(k)); op.value = k; sl.append(op); }
+    sl.setAttribute('aria-label', 'קטגוריה עבור ' + merchant);
+    sl.onchange = () => { if (sl.value) act({op: 'category', id: o.id, category: sl.value, scope: 'merchant'}); };
+    row.append(n, sl); $('review').append(row);
+  }
+}
+function renderHeader() {
+  const age = data ? (Date.now() - Date.parse(data.updatedAt)) / 3600000 : 0;
+  const when = d => new Date(d).toLocaleString('he-IL', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'});
+  let t = offline ? `עותק שמור מ־${when(savedAt)} · המחשב לא זמין כרגע` : `עודכן: ${when(data.updatedAt)}`;
+  if (queue.length) t += mode === 'public' ? ` · ${queue.length} תיקונים ממתינים (נשלחו ${queue.filter(o => o.sentAt).length})` : ` · ${queue.length} שינויים ממתינים למחשב`;
+  if (!offline && age > 26) t += ' · הנתונים ישנים, המחשב כנראה לא רץ';
+  $('updated').textContent = t; $('updated').className = ((!offline && age > 26) || queue.length ? 'error' : 'muted') + ' small';
+  const unsent = queue.filter(o => !o.sentAt).length, b = $('send');
+  b.hidden = !(mode === 'public' && unsent && data.inbox);
+  if (!b.hidden) b.textContent = `שלח ${Math.min(unsent, 12)} תיקונים למחשב`;
+  $('refresh').hidden = mode !== 'local';
+}
+function renderPrivacy() {
+  const s = store.get('spending-status-v2', null), p = $('privacy');
+  if (mode === 'public') { p.textContent = 'האתר הציבורי: אין בו סיסמאות, שמות משתמש, מספרי חשבון או מספרי כרטיס. נבדק לפני כל העלאה.'; p.className = 'status-line'; return; }
+  if (!s?.privacy) { p.textContent = 'בדיקת פרטיות: עדיין לא רצה'; return; }
+  const bad = s.privacy.checks.filter(c => !c.ok);
+  p.textContent = bad.length ? `בדיקת פרטיות: יש בעיה (${bad.map(c => c.name).join(', ')})` : `בדיקת פרטיות עברה ✓ (${new Date(s.privacy.at).toLocaleString('he-IL', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'})})`;
+  p.className = 'status-line' + (bad.length ? ' error' : '');
+}
+
+/* ================= shell ================= */
+function render() {
+  if (!data) return;
+  $('view-home').hidden = view !== 'home'; $('view-trends').hidden = view !== 'trends';
+  $('tab-home').setAttribute('aria-current', view === 'home' ? 'page' : 'false'); $('tab-trends').setAttribute('aria-current', view === 'trends' ? 'page' : 'false');
+  renderHeader();
+  if (view === 'home') { renderHero(); renderWorth(); renderCategories(); renderReview(); renderPrivacy(); } else { renderChart(); renderSnapshot(); renderInsights(); renderCompare(); renderShops(); }
+}
+function syncSelect() { $('month').value = sel; }
+function go(v) { view = v; window.scrollTo(0, 0); render(); }
+$('tab-home').onclick = () => go('home'); $('tab-trends').onclick = () => go('trends');
+$('month').onchange = () => { sel = $('month').value; openKey = null; render(); };
+$('send').onclick = sendToMac;
+$('refresh').onclick = async () => {
+  const b = $('refresh'); b.disabled = true;
+  try { const r = await fetch('api/refresh', {method: 'POST', headers: {'X-Spending': '1'}}); const j = await r.json(); b.textContent = j.started ? 'הרענון התחיל, תנו לו כדקה' : 'כבר רץ עדכון'; } catch { b.textContent = 'המחשב לא זמין'; }
+  setTimeout(() => { b.disabled = false; b.textContent = 'רענן עכשיו'; }, 8000);
+};
+
+async function fetchData() {
+  try { const r = await fetch('api/data', {cache: 'no-store'}); if (r.ok && (r.headers.get('content-type') || '').includes('json')) { mode = 'local'; return await r.json(); } } catch { /* not the Mac page, or the Mac is asleep */ }
+  const r = await fetch('data.json', {cache: 'no-store'});
+  if (!r.ok) throw Error();
+  mode = 'public';
+  return r.json();
+}
+async function load() {
+  try {
+    const d = await fetchData();
+    if (d.version !== 2 || !Array.isArray(d.transactions)) throw Error();
+    data = d; offline = false; savedAt = new Date().toISOString();
+    store.set('spending-cache-v2', {savedAt, data, mode});
+    if (mode === 'local') fetch('api/status', {cache: 'no-store'}).then(x => x.json()).then(s => { store.set('spending-status-v2', s); renderPrivacy(); }).catch(() => {});
+    else { // fixes the Mac has applied since they were sent can be forgotten; any that did not arrive are offered again
+      const fresh = Date.parse(data.updatedAt);
+      queue = queue.filter(o => !(o.sentAt && fresh > o.sentAt && opApplied(o))).map(o => (o.sentAt && fresh > o.sentAt ? (({sentAt, ...rest}) => rest)(o) : o));
+      store.set('spending-queue-v2', queue);
+    }
+  } catch {
+    const c = store.get('spending-cache-v2', null);
+    if (!c) { $('updated').textContent = 'אין נתונים. פתחו את הדף כשיש חיבור.'; $('updated').className = 'error small'; return; }
+    data = c.data; savedAt = c.savedAt; offline = true; mode = c.mode || mode;
+  }
+  for (const op of queue) applyLocal(op);
+  if (!monthsBuilt) { for (const m of allMonths().reverse()) { const o = el('option', monthFull(m)); o.value = m; $('month').append(o); } monthsBuilt = true; sel = currentMonth(); }
+  else if (![...$('month').options].some(o => o.value === sel)) sel = currentMonth();
+  syncSelect(); render();
+  if (!offline) flush();
+}
+window.addEventListener('online', () => load());
+document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || ['localhost', '127.0.0.1'].includes(location.hostname))) navigator.serviceWorker.register('sw.js').catch(() => {});
+load();
+</script>
