@@ -1,10 +1,13 @@
 name: Publish page
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
   pages: write
   id-token: write
+  actions: write
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -16,11 +19,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: main
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
           path: site
+      - name: Locate uploaded Pages artifact
+        id: artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ARTIFACT_ID=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts" --jq '.artifacts[] | select(.name == "github-pages") | .id' | head -n 1)
+          if [ -z "$ARTIFACT_ID" ]; then echo 'Pages artifact not found' >&2; exit 1; fi
+          echo "artifact_id=$ARTIFACT_ID" >> "$GITHUB_OUTPUT"
       - id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_id: ${{ steps.artifact.outputs.artifact_id }}
+
